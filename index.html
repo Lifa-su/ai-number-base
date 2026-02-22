@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Number Base - Converter &amp; Bitwise Visualizer</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#1a1a2e;--sf:#16213e;--ac:#e94560;--ac2:#533483;--tx:#eee;--dm:#8892b0;--bd:#234}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
+.w{max-width:860px;margin:0 auto;padding:20px 16px 60px}
+header{text-align:center;padding:32px 0 24px}
+h1{font-size:2rem;background:linear-gradient(135deg,var(--ac),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+header p{color:var(--dm);font-size:.93rem;margin-top:4px}
+.s{background:var(--sf);border-radius:12px;padding:22px;margin-bottom:22px;box-shadow:0 4px 20px rgba(0,0,0,.4);border:1px solid var(--bd)}
+.s h2{font-size:1.05rem;margin-bottom:14px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.g{grid-template-columns:1fr}}
+label{font-size:.76rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--dm);display:block;margin-bottom:4px}
+input{background:var(--bg);border:1.5px solid var(--bd);border-radius:8px;padding:10px 12px;color:var(--tx);font-size:.95rem;font-family:'SF Mono',Consolas,monospace;width:100%;transition:border .2s}
+input:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px rgba(233,69,96,.15)}
+input.er{border-color:#c0392b}
+.ht{font-size:.7rem;color:var(--dm);margin-top:3px}
+.ob{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.ob button{background:var(--bg);border:1.5px solid var(--bd);border-radius:8px;padding:7px 16px;color:var(--tx);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
+.ob button:hover{border-color:var(--ac);color:var(--ac)}
+.ob button.on{background:var(--ac);border-color:var(--ac);color:#fff}
+#vis{background:var(--bg);border-radius:8px;padding:14px;font-family:'SF Mono',Consolas,monospace;overflow-x:auto}
+.r{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.r .l{min-width:52px;text-align:right;color:var(--dm);font-size:.76rem;flex-shrink:0}
+.bs{display:flex;gap:2px}
+.b{width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:4px;font-size:.82rem;font-weight:600;background:var(--sf);color:var(--dm)}
+.b.o{background:var(--ac);color:#fff}
+.rs .b.o{background:var(--ac2);color:#fff}
+.dv{height:1px;background:var(--bd);margin:7px 0 7px 60px}
+.ch{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.ch div{background:var(--sf);border-radius:6px;padding:4px 10px;font-size:.8rem}
+.ch span{color:var(--dm);margin-right:3px}
+.gs{width:4px;flex-shrink:0}
+footer{text-align:center;padding:24px 0 8px;color:var(--dm);font-size:.76rem}
+</style>
+</head>
+<body>
+<div class="w">
+<header><h1>⚡ AI Number Base</h1><p>Real-time base conversion &amp; bitwise visualizer</p></header>
+<div class="s"><h2>🔄 Base Converter</h2>
+<div class="g">
+<div><label>Binary (Base 2)</label><input id="bin" placeholder="10110011" data-b="2" spellcheck="false"><div class="ht">0, 1</div></div>
+<div><label>Octal (Base 8)</label><input id="oct" placeholder="263" data-b="8" spellcheck="false"><div class="ht">0–7</div></div>
+<div><label>Decimal (Base 10)</label><input id="dec" placeholder="179" data-b="10" spellcheck="false"><div class="ht">0–9</div></div>
+<div><label>Hex (Base 16)</label><input id="hex" placeholder="B3" data-b="16" spellcheck="false"><div class="ht">0–9, A–F</div></div>
+</div></div>
+<div class="s"><h2>🧮 Bitwise Operations</h2>
+<div class="g" style="margin-bottom:14px">
+<div><label>Number A (decimal)</label><input id="bA" placeholder="170" spellcheck="false"></div>
+<div><label>Number B (decimal)</label><input id="bB" placeholder="92" spellcheck="false"></div>
+</div>
+<div class="ob" id="ob">
+<button class="on" data-o="AND">AND</button><button data-o="OR">OR</button><button data-o="XOR">XOR</button><button data-o="NOT">NOT A</button>
+</div>
+<div id="vis"><div style="color:var(--dm);text-align:center;padding:16px">Enter numbers above to visualize</div></div>
+</div>
+<footer>AI Number Base — Built for developers &amp; students</footer>
+</div>
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var ids=['bin','oct','dec','hex'];
+var bm={bin:2,oct:8,dec:10,hex:16};
+var vr={2:/^[01]+$/,8:/^[0-7]+$/,10:/^[0-9]+$/,16:/^[0-9a-fA-F]+$/};
+ids.forEach(function(id){
+$(id).addEventListener('input',function(){
+var v=this.value.trim(),b=bm[id];
+if(!v){ids.forEach(function(f){$(f).classList.remove('er');if(f!==id)$(f).value=''});return}
+if(!vr[b].test(v)){this.classList.add('er');return}
+this.classList.remove('er');
+try{
+var pfx=b===16?'0x':b===8?'0o':b===2?'0b':'';
+var n=BigInt(pfx+v);
+ids.forEach(function(f){if(f===id)return;$(f).classList.remove('er');$(f).value=n.toString(bm[f]).toUpperCase()});
+}catch(e){this.classList.add('er')}
+});
+});
+var op='AND';
+$('ob').addEventListener('click',function(e){
+var btn=e.target.closest('button');if(!btn)return;
+this.querySelectorAll('button').forEach(function(b){b.classList.remove('on')});
+btn.classList.add('on');op=btn.dataset.o;render();
+});
+$('bA').addEventListener('input',render);
+$('bB').addEventListener('input',render);
+function render(){
+var sa=$('bA').value.trim(),sb=$('bB').value.trim();
+var box=$('vis');
+if(!sa||(op!=='NOT'&&!sb)){box.innerHTML='<div style="color:var(--dm);text-align:center;padding:16px">Enter numbers above to visualize</div>';return}
+if(!/^\d+$/.test(sa)||(op!=='NOT'&&!/^\d+$/.test(sb))){box.innerHTML='<div style="color:#c0392b;text-align:center;padding:16px">Please enter valid decimal numbers</div>';return}
+var a=parseInt(sa,10),b=op!=='NOT'?parseInt(sb,10):0;
+if(a>4294967295||(op!=='NOT'&&b>4294967295)){box.innerHTML='<div style="color:#c0392b;text-align:center;padding:16px">Max value: 4294967295 (32-bit)</div>';return}
+var au=a>>>0,bu=b>>>0,res;
+if(op==='AND')res=(au&bu)>>>0;
+else if(op==='OR')res=(au|bu)>>>0;
+else if(op==='XOR')res=(au^bu)>>>0;
+else res=(~au)>>>0;
+var bits=Math.max(8,Math.ceil(Math.log2(Math.max(au,bu,res)+1)||1));
+bits=bits<=8?8:bits<=16?16:32;
+var h='';
+h+=mkRow('A',au,bits,false);
+if(op!=='NOT')h+=mkRow('B',bu,bits,false);
+h+='<div class="dv"></div>';
+h+=mkRow(op==='NOT'?'NOT A':op,res,bits,true);
+h+='<div class="ch">';
+h+='<div><span>BIN</span>'+(res>>>0).toString(2)+'</div>';
+h+='<div><span>OCT</span>'+(res>>>0).toString(8)+'</div>';
+h+='<div><span>DEC</span>'+(res>>>0)+'</div>';
+h+='<div><span>HEX</span>'+(res>>>0).toString(16).toUpperCase()+'</div>';
+h+='</div>';
+box.innerHTML=h;
+}
+function mkRow(lb,num,len,isRes){
+var s='<div class="r'+(isRes?' rs':'')+'"><div class="l">'+lb+'</div><div class="bs">';
+for(var i=len-1;i>=0;i--){
+if(i<len-1&&(i+1)%4===0)s+='<div class="gs"></div>';
+var bit=(num>>>i)&1;
+s+='<div class="b'+(bit?' o':'')+'">'+bit+'</div>';
+}
+s+='</div></div>';return s;
+}
+})();
+</script>
+<script src="https://alwingulla.com/88/tag.min.js" data-zone="130647" async data-cfasync="false"></script>
+</body>
+</html>
