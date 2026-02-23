@@ -1,213 +1,249 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Number Base - Converter &amp; Bitwise Visualizer</title>
+<title>AI Number Base - 进制转换器</title>
+<meta name="description" content="Free online number base converter. Convert between binary, octal, decimal, hexadecimal and any base from 2 to 36.">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#1a1a2e;--sf:#16213e;--ac:#e94560;--ac2:#533483;--tx:#eee;--dm:#8892b0;--bd:#234}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
-.w{max-width:860px;margin:0 auto;padding:20px 16px 60px}
-header{text-align:center;padding:32px 0 24px}
-h1{font-size:2rem;background:linear-gradient(135deg,var(--ac),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-header p{color:var(--dm);font-size:.93rem;margin-top:4px}
-.s{background:var(--sf);border-radius:12px;padding:22px;margin-bottom:22px;box-shadow:0 4px 20px rgba(0,0,0,.4);border:1px solid var(--bd)}
-.s h2{font-size:1.05rem;margin-bottom:14px}
-.g{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:600px){.g{grid-template-columns:1fr}}
-label{font-size:.76rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--dm);display:block;margin-bottom:4px}
-input{background:var(--bg);border:1.5px solid var(--bd);border-radius:8px;padding:10px 12px;color:var(--tx);font-size:.95rem;font-family:'SF Mono',Consolas,monospace;width:100%;transition:border .2s}
-input:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px rgba(233,69,96,.15)}
-input.er{border-color:#c0392b}
-.ht{font-size:.7rem;color:var(--dm);margin-top:3px}
-.ob{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-.ob button{background:var(--bg);border:1.5px solid var(--bd);border-radius:8px;padding:7px 16px;color:var(--tx);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
-.ob button:hover{border-color:var(--ac);color:var(--ac)}
-.ob button.on{background:var(--ac);border-color:var(--ac);color:#fff}
-#vis{background:var(--bg);border-radius:8px;padding:14px;font-family:'SF Mono',Consolas,monospace;overflow-x:auto}
-.r{display:flex;align-items:center;gap:8px;margin-bottom:5px}
-.r .l{min-width:52px;text-align:right;color:var(--dm);font-size:.76rem;flex-shrink:0}
-.bs{display:flex;gap:2px}
-.b{width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:4px;font-size:.82rem;font-weight:600;background:var(--sf);color:var(--dm)}
-.b.o{background:var(--ac);color:#fff}
-.rs .b.o{background:var(--ac2);color:#fff}
-.dv{height:1px;background:var(--bd);margin:7px 0 7px 60px}
-.ch{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
-.ch div{background:var(--sf);border-radius:6px;padding:4px 10px;font-size:.8rem}
-.ch span{color:var(--dm);margin-right:3px}
-.gs{width:4px;flex-shrink:0}
-footer{text-align:center;padding:24px 0 8px;color:var(--dm);font-size:.76rem}
-.pro-section{position:relative;max-width:860px;margin:0 auto 22px;border-radius:12px;overflow:hidden}
-.pro-blur{filter:blur(3px);pointer-events:none;opacity:.7;padding:22px;background:var(--sf);border:1px solid var(--bd);border-radius:12px}
-.pro-blur h2{font-size:1.05rem;margin-bottom:14px}
-.pro-blur .g{margin-bottom:14px}
-.pro-blur .mock-tbl{width:100%;border-collapse:collapse;font-size:.82rem;font-family:'SF Mono',Consolas,monospace}
-.pro-blur .mock-tbl th,.pro-blur .mock-tbl td{padding:8px 10px;border:1px solid var(--bd);text-align:left}
-.pro-blur .mock-tbl th{background:var(--bg);color:var(--dm);font-size:.72rem;text-transform:uppercase}
-.pro-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;z-index:2;background:rgba(26,26,46,.45);border-radius:12px;transition:background .2s}
-.pro-overlay:hover{background:rgba(26,26,46,.6)}
-.pro-lock{font-size:2.2rem;margin-bottom:8px}
-.pro-cta{font-size:1rem;font-weight:700;color:var(--ac);letter-spacing:.02em}
-.pro-badge{position:absolute;top:12px;right:12px;z-index:3;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.05em}
-.pro-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-.pro-modal-bg.open{display:flex}
-.pro-modal{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:32px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:pmIn .3s ease}
-@keyframes pmIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
-.pro-modal h2{font-size:1.4rem;margin-bottom:6px;background:linear-gradient(135deg,var(--ac),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.pro-modal .pm-sub{color:var(--dm);font-size:.88rem;margin-bottom:18px}
-.pro-modal ul{text-align:left;list-style:none;margin-bottom:22px}
-.pro-modal ul li{padding:8px 0;border-bottom:1px solid var(--bd);font-size:.9rem;display:flex;align-items:center;gap:8px}
-.pro-modal ul li:last-child{border-bottom:none}
-.pro-modal ul li::before{content:'✓';color:var(--ac);font-weight:700}
-.pro-buy{display:block;width:100%;padding:14px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-size:1rem;font-weight:700;border:none;border-radius:10px;cursor:pointer;text-decoration:none;transition:transform .2s,box-shadow .2s;text-align:center}
-.pro-buy:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(233,69,96,.4)}
-.pro-later{display:block;margin:12px auto 0;background:none;border:none;color:var(--dm);font-size:.85rem;cursor:pointer;padding:6px}
-.pro-later:hover{color:var(--tx)}
+:root{--bg:#1a1a2e;--sf:#16213e;--sf2:#0f3460;--ac:#e94560;--ac2:#533483;--tx:#eee;--tx2:#aab;--bd:#2a2a4e;--ok:#00d68f;--er:#ff6b6b;--r:10px}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.ct{width:100%;max-width:900px;padding:20px}
+header{text-align:center;padding:30px 0 20px}
+header h1{font-size:1.8rem;background:linear-gradient(135deg,var(--ac),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+header p{color:var(--tx2);margin-top:6px;font-size:.95rem}
+.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.tab{padding:10px 20px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);cursor:pointer;color:var(--tx2);transition:.2s;font-size:.9rem}
+.tab:hover{border-color:var(--ac)}.tab.active{background:var(--ac);color:#fff;border-color:var(--ac)}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:24px;margin-bottom:16px}
+.card h2{font-size:1.1rem;margin-bottom:16px}
+.row{display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap;align-items:flex-end}
+.field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:120px}
+.field label{font-size:.82rem;color:var(--tx2);font-weight:500}
+input,select,textarea{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:10px 14px;color:var(--tx);font-size:.95rem;outline:none;transition:.2s;width:100%;font-family:inherit}
+input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(233,69,96,.15)}
+input.err,textarea.err{border-color:var(--er);box-shadow:0 0 0 3px rgba(255,107,107,.15)}
+textarea{resize:vertical;min-height:80px;font-family:"SF Mono",Monaco,Consolas,monospace;font-size:.88rem}
+select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23aab'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.emsg{color:var(--er);font-size:.8rem;margin-top:2px;min-height:1.2em}
+.ri{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--bg);border-radius:8px;margin-bottom:8px;border:1px solid var(--bd)}
+.ri .lb{font-size:.82rem;color:var(--tx2);min-width:80px}
+.ri .vl{font-family:"SF Mono",Monaco,Consolas,monospace;font-size:.95rem;word-break:break-all;flex:1;margin:0 12px}
+.cb{background:none;border:1px solid var(--bd);border-radius:6px;color:var(--tx2);cursor:pointer;padding:5px 10px;font-size:.78rem;transition:.2s;white-space:nowrap}
+.cb:hover{border-color:var(--ac);color:var(--ac)}.cb.ok{border-color:var(--ok);color:var(--ok)}
+.br{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:14px;margin-bottom:8px}
+.br .s{font-size:.82rem;color:var(--tx2);margin-bottom:6px}
+.br .d{font-family:"SF Mono",Monaco,Consolas,monospace;font-size:.95rem;word-break:break-all}
+.br .de{color:var(--er);font-size:.85rem}
+.ca{display:inline-flex;align-items:center;gap:6px;background:var(--sf2);border:1px solid var(--bd);border-radius:8px;color:var(--tx);cursor:pointer;padding:8px 18px;font-size:.88rem;transition:.2s;margin-top:8px}
+.ca:hover{border-color:var(--ac);background:var(--ac);color:#fff}
+.sec{display:none}.sec.active{display:block}
+footer{text-align:center;padding:30px 0 20px;color:var(--tx2);font-size:.78rem}
+@media(max-width:600px){.ct{padding:14px}header h1{font-size:1.4rem}.row{flex-direction:column}.field{min-width:100%}.tab{padding:8px 14px;font-size:.82rem}.ri{flex-wrap:wrap;gap:6px}.ri .vl{margin:0;order:3;width:100%}}
 </style>
 </head>
 <body>
-<div class="w">
-<header><h1>⚡ AI Number Base</h1><p>Real-time base conversion &amp; bitwise visualizer</p></header>
-<div class="s"><h2>🔄 Base Converter</h2>
-<div class="g">
-<div><label>Binary (Base 2)</label><input id="bin" placeholder="10110011" data-b="2" spellcheck="false"><div class="ht">0, 1</div></div>
-<div><label>Octal (Base 8)</label><input id="oct" placeholder="263" data-b="8" spellcheck="false"><div class="ht">0–7</div></div>
-<div><label>Decimal (Base 10)</label><input id="dec" placeholder="179" data-b="10" spellcheck="false"><div class="ht">0–9</div></div>
-<div><label>Hex (Base 16)</label><input id="hex" placeholder="B3" data-b="16" spellcheck="false"><div class="ht">0–9, A–F</div></div>
+<div class="ct">
+<header><h1>&#x1f522; AI Number Base Converter</h1><p>进制转换器 &mdash; 支持 2-36 进制、浮点数、批量转换</p></header>
+<div class="tabs" role="tablist">
+<div class="tab active" role="tab" data-tab="standard" tabindex="0">标准转换</div>
+<div class="tab" role="tab" data-tab="custom" tabindex="0">自定义进制</div>
+<div class="tab" role="tab" data-tab="batch" tabindex="0">批量转换</div>
+</div>
+
+<div class="sec active" id="sec-standard"><div class="card"><h2>快速进制转换</h2>
+<div class="row"><div class="field"><label for="si">输入数值</label>
+<input id="si" placeholder="例如: 255, 3.14, FF" autocomplete="off" spellcheck="false">
+<div class="emsg" id="se"></div></div>
+<div class="field" style="max-width:160px"><label for="sf">源进制</label>
+<select id="sf"><option value="2">二进制 (2)</option><option value="8">八进制 (8)</option><option value="10" selected>十进制 (10)</option><option value="16">十六进制 (16)</option></select>
 </div></div>
-<div class="s"><h2>🧮 Bitwise Operations</h2>
-<div class="g" style="margin-bottom:14px">
-<div><label>Number A (decimal)</label><input id="bA" placeholder="170" spellcheck="false"></div>
-<div><label>Number B (decimal)</label><input id="bB" placeholder="92" spellcheck="false"></div>
+<div id="sr"></div></div></div>
+
+<div class="sec" id="sec-custom"><div class="card"><h2>自定义进制转换</h2>
+<div class="row"><div class="field"><label for="ci">输入数值</label>
+<input id="ci" placeholder="输入数值" autocomplete="off" spellcheck="false">
+<div class="emsg" id="ce"></div></div>
+<div class="field" style="max-width:130px"><label for="cfr">源进制 (2-36)</label>
+<input id="cfr" type="number" min="2" max="36" value="10"></div>
+<div class="field" style="max-width:130px"><label for="cto">目标进制 (2-36)</label>
+<input id="cto" type="number" min="2" max="36" value="16"></div></div>
+<div id="cr"></div></div></div>
+
+<div class="sec" id="sec-batch"><div class="card"><h2>批量转换</h2>
+<div class="row">
+<div class="field" style="max-width:130px"><label for="bfr">源进制</label>
+<select id="bfr"><option value="2">二进制</option><option value="8">八进制</option><option value="10" selected>十进制</option><option value="16">十六进制</option></select></div>
+<div class="field" style="max-width:130px"><label for="bto">目标进制</label>
+<select id="bto"><option value="2" selected>二进制</option><option value="8">八进制</option><option value="10">十进制</option><option value="16">十六进制</option></select></div>
 </div>
-<div class="ob" id="ob">
-<button class="on" data-o="AND">AND</button><button data-o="OR">OR</button><button data-o="XOR">XOR</button><button data-o="NOT">NOT A</button>
+<div class="field"><label for="bi">输入数值（每行一个）</label>
+<textarea id="bi" placeholder="每行一个数值，例如：&#10;255&#10;128&#10;64" rows="5"></textarea></div>
+<div id="bres"></div></div></div>
+
+<footer>AI Number Base Converter &mdash; Free Online Tool</footer>
 </div>
-<div id="vis"><div style="color:var(--dm);text-align:center;padding:16px">Enter numbers above to visualize</div></div>
-</div>
-<div class="pro-section">
-<div class="pro-badge">🔒 PRO</div>
-<div class="pro-blur">
-<h2>🔬 IEEE 754 Float Converter</h2>
-<div class="g">
-<div><label>Float (32-bit)</label><input disabled placeholder="3.14159" style="opacity:.5"></div>
-<div><label>Double (64-bit)</label><input disabled placeholder="3.141592653589793" style="opacity:.5"></div>
-</div>
-<div style="margin:14px 0;padding:12px;background:var(--bg);border-radius:8px">
-<div style="font-size:.8rem;color:var(--dm);margin-bottom:6px">Sign | Exponent | Mantissa</div>
-<div style="display:flex;gap:2px">
-<div class="b o" style="width:30px">0</div>
-<div class="b" style="background:var(--ac2);color:#fff;width:30px">1</div>
-<div class="b" style="background:var(--ac2);color:#fff;width:30px">0</div>
-<div class="b" style="background:var(--ac2);color:#fff;width:30px">0</div>
-<div class="b" style="background:var(--ac2);color:#fff;width:30px">0</div>
-<div class="gs"></div>
-<div class="b" style="width:30px">0</div>
-<div class="b o" style="width:30px">1</div>
-<div class="b" style="width:30px">0</div>
-<div class="b o" style="width:30px">1</div>
-</div>
-</div>
-<h2 style="margin-top:18px">📦 Batch Converter</h2>
-<table class="mock-tbl" style="margin-top:10px">
-<tr><th>Input</th><th>BIN</th><th>OCT</th><th>DEC</th><th>HEX</th></tr>
-<tr><td>255</td><td>11111111</td><td>377</td><td>255</td><td>FF</td></tr>
-<tr><td>1024</td><td>10000000000</td><td>2000</td><td>1024</td><td>400</td></tr>
-<tr><td>0xDEAD</td><td>1101111010101101</td><td>157255</td><td>57005</td><td>DEAD</td></tr>
-</table>
-<div style="margin-top:14px;padding:10px;background:var(--bg);border-radius:8px;font-size:.82rem;color:var(--dm)">
-<div style="font-weight:600;margin-bottom:4px">🔌 REST API Endpoint</div>
-<code style="color:var(--ac)">GET /api/convert?value=255&from=dec&to=hex</code>
-</div>
-</div>
-<div class="pro-overlay" onclick="document.getElementById('proModal').classList.add('open')">
-<div class="pro-lock">🔒</div>
-<div class="pro-cta">Unlock Pro Features</div>
-</div>
-</div>
-<div class="pro-modal-bg" id="proModal" onclick="if(event.target===this)this.classList.remove('open')">
-<div class="pro-modal">
-<h2>⚡ Number Base Pro</h2>
-<p class="pm-sub">Advanced conversion tools for professionals</p>
-<ul>
-<li>IEEE 754 float &amp; double precision converter</li>
-<li>Visual sign / exponent / mantissa breakdown</li>
-<li>Batch convert hundreds of values at once</li>
-<li>CSV / JSON import &amp; export</li>
-<li>REST API with 10,000 requests/month</li>
-<li>Custom base support (base 2–36)</li>
-</ul>
-<a class="pro-buy" href="https://feifeicch.gumroad.com/l/ai-number-base-pro" target="_blank">Upgrade to Pro — $9</a>
-<button class="pro-later" onclick="document.getElementById('proModal').classList.remove('open')">Maybe later</button>
-</div>
-</div>
-<footer>AI Number Base — Built for developers &amp; students</footer>
-</div>
+
 <script>
-(function(){
-var $=function(i){return document.getElementById(i)};
-var ids=['bin','oct','dec','hex'];
-var bm={bin:2,oct:8,dec:10,hex:16};
-var vr={2:/^[01]+$/,8:/^[0-7]+$/,10:/^[0-9]+$/,16:/^[0-9a-fA-F]+$/};
-ids.forEach(function(id){
-$(id).addEventListener('input',function(){
-var v=this.value.trim(),b=bm[id];
-if(!v){ids.forEach(function(f){$(f).classList.remove('er');if(f!==id)$(f).value=''});return}
-if(!vr[b].test(v)){this.classList.add('er');return}
-this.classList.remove('er');
-try{
-var pfx=b===16?'0x':b===8?'0o':b===2?'0b':'';
-var n=BigInt(pfx+v);
-ids.forEach(function(f){if(f===id)return;$(f).classList.remove('er');$(f).value=n.toString(bm[f]).toUpperCase()});
-}catch(e){this.classList.add('er')}
-});
-});
-var op='AND';
-$('ob').addEventListener('click',function(e){
-var btn=e.target.closest('button');if(!btn)return;
-this.querySelectorAll('button').forEach(function(b){b.classList.remove('on')});
-btn.classList.add('on');op=btn.dataset.o;render();
-});
-$('bA').addEventListener('input',render);
-$('bB').addEventListener('input',render);
-function render(){
-var sa=$('bA').value.trim(),sb=$('bB').value.trim();
-var box=$('vis');
-if(!sa||(op!=='NOT'&&!sb)){box.innerHTML='<div style="color:var(--dm);text-align:center;padding:16px">Enter numbers above to visualize</div>';return}
-if(!/^\d+$/.test(sa)||(op!=='NOT'&&!/^\d+$/.test(sb))){box.innerHTML='<div style="color:#c0392b;text-align:center;padding:16px">Please enter valid decimal numbers</div>';return}
-var a=parseInt(sa,10),b=op!=='NOT'?parseInt(sb,10):0;
-if(a>4294967295||(op!=='NOT'&&b>4294967295)){box.innerHTML='<div style="color:#c0392b;text-align:center;padding:16px">Max value: 4294967295 (32-bit)</div>';return}
-var au=a>>>0,bu=b>>>0,res;
-if(op==='AND')res=(au&bu)>>>0;
-else if(op==='OR')res=(au|bu)>>>0;
-else if(op==='XOR')res=(au^bu)>>>0;
-else res=(~au)>>>0;
-var bits=Math.max(8,Math.ceil(Math.log2(Math.max(au,bu,res)+1)||1));
-bits=bits<=8?8:bits<=16?16:32;
-var h='';
-h+=mkRow('A',au,bits,false);
-if(op!=='NOT')h+=mkRow('B',bu,bits,false);
-h+='<div class="dv"></div>';
-h+=mkRow(op==='NOT'?'NOT A':op,res,bits,true);
-h+='<div class="ch">';
-h+='<div><span>BIN</span>'+(res>>>0).toString(2)+'</div>';
-h+='<div><span>OCT</span>'+(res>>>0).toString(8)+'</div>';
-h+='<div><span>DEC</span>'+(res>>>0)+'</div>';
-h+='<div><span>HEX</span>'+(res>>>0).toString(16).toUpperCase()+'</div>';
-h+='</div>';
-box.innerHTML=h;
+const DIGITS='0123456789abcdefghijklmnopqrstuvwxyz';
+
+function validate(s,base){
+  s=s.trim().toLowerCase();
+  if(!s)return{ok:false,err:'请输入数值'};
+  let neg=false;
+  if(s[0]==='-'){neg=true;s=s.slice(1)}
+  if(!s)return{ok:false,err:'无效输入'};
+  const parts=s.split('.');
+  if(parts.length>2)return{ok:false,err:'多个小数点'};
+  const valid=DIGITS.slice(0,base);
+  for(const p of parts){
+    if(!p&&parts.length===1)return{ok:false,err:'无效输入'};
+    for(const c of p){
+      if(!valid.includes(c))return{ok:false,err:`字符 "${c}" 在 ${base} 进制中无效（允许: ${valid}）`};
+    }
+  }
+  return{ok:true,neg,int:parts[0]||'0',frac:parts[1]||'',raw:s};
 }
-function mkRow(lb,num,len,isRes){
-var s='<div class="r'+(isRes?' rs':'')+'"><div class="l">'+lb+'</div><div class="bs">';
-for(var i=len-1;i>=0;i--){
-if(i<len-1&&(i+1)%4===0)s+='<div class="gs"></div>';
-var bit=(num>>>i)&1;
-s+='<div class="b'+(bit?' o':'')+'">'+bit+'</div>';
+
+function toDecimal(intPart,fracPart,base){
+  let result=0n;
+  const b=BigInt(base);
+  for(const c of intPart){
+    result=result*b+BigInt(DIGITS.indexOf(c));
+  }
+  let frac=0,fb=1;
+  for(const c of fracPart){
+    fb/=base;
+    frac+=DIGITS.indexOf(c)*fb;
+  }
+  return{int:result,frac};
 }
-s+='</div></div>';return s;
+
+function fromDecimal(intVal,fracVal,base,maxFrac){
+  maxFrac=maxFrac||20;
+  const b=BigInt(base);
+  let intStr='';
+  if(intVal===0n)intStr='0';
+  let v=intVal;
+  while(v>0n){
+    intStr=DIGITS[Number(v%b)]+intStr;
+    v=v/b;
+  }
+  if(!intStr)intStr='0';
+  let fracStr='';
+  if(fracVal>1e-15){
+    let f=fracVal;
+    const seen=new Set();
+    for(let i=0;i<maxFrac&&f>1e-15;i++){
+      f*=base;
+      const d=Math.floor(f);
+      fracStr+=DIGITS[d];
+      f-=d;
+      const key=f.toFixed(15);
+      if(seen.has(key))break;
+      seen.add(key);
+    }
+  }
+  return fracStr?intStr+'.'+fracStr:intStr;
 }
-})();
+
+function convert(input,fromBase,toBase){
+  const v=validate(input,fromBase);
+  if(!v.ok)return{err:v.err};
+  const dec=toDecimal(v.int,v.frac,fromBase);
+  const result=fromDecimal(dec.int,dec.frac,toBase);
+  return{val:(v.neg?'-':'')+result};
+}
+
+function resultHTML(label,value){
+  return `<div class="ri"><span class="lb">${label}</span><span class="vl">${value}</span><button class="cb" onclick="copyVal(this,'${value.replace(/'/g,"\\'")}')">复制</button></div>`;
+}
+
+function copyVal(btn,text){
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='已复制';btn.classList.add('ok');
+    setTimeout(()=>{btn.textContent='复制';btn.classList.remove('ok')},1500);
+  });
+}
+
+// Tabs
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.sec').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('sec-'+t.dataset.tab).classList.add('active');
+  });
+  t.addEventListener('keydown',e=>{if(e.key==='Enter')t.click()});
+});
+
+// Standard conversion
+function doStd(){
+  const inp=document.getElementById('si').value.trim();
+  const from=parseInt(document.getElementById('sf').value);
+  const errEl=document.getElementById('se');
+  const resEl=document.getElementById('sr');
+  if(!inp){errEl.textContent='';resEl.innerHTML='';document.getElementById('si').classList.remove('err');return}
+  const v=validate(inp,from);
+  if(!v.ok){errEl.textContent=v.err;resEl.innerHTML='';document.getElementById('si').classList.add('err');return}
+  errEl.textContent='';document.getElementById('si').classList.remove('err');
+  const bases=[{b:2,n:'二进制'},{b:8,n:'八进制'},{b:10,n:'十进制'},{b:16,n:'十六进制'}];
+  let html='';
+  for(const t of bases){
+    if(t.b===from)continue;
+    const r=convert(inp,from,t.b);
+    html+=resultHTML(t.n+' ('+t.b+')',r.err||r.val);
+  }
+  resEl.innerHTML=html;
+}
+document.getElementById('si').addEventListener('input',doStd);
+document.getElementById('sf').addEventListener('change',doStd);
+
+// Custom conversion
+function doCust(){
+  const inp=document.getElementById('ci').value.trim();
+  const from=parseInt(document.getElementById('cfr').value)||10;
+  const to=parseInt(document.getElementById('cto').value)||16;
+  const errEl=document.getElementById('ce');
+  const resEl=document.getElementById('cr');
+  if(from<2||from>36||to<2||to>36){errEl.textContent='进制范围 2-36';resEl.innerHTML='';return}
+  if(!inp){errEl.textContent='';resEl.innerHTML='';document.getElementById('ci').classList.remove('err');return}
+  const r=convert(inp,from,to);
+  if(r.err){errEl.textContent=r.err;resEl.innerHTML='';document.getElementById('ci').classList.add('err');return}
+  errEl.textContent='';document.getElementById('ci').classList.remove('err');
+  resEl.innerHTML=resultHTML(to+'进制',r.val);
+}
+document.getElementById('ci').addEventListener('input',doCust);
+document.getElementById('cfr').addEventListener('input',doCust);
+document.getElementById('cto').addEventListener('input',doCust);
+
+// Batch conversion
+function doBatch(){
+  const inp=document.getElementById('bi').value;
+  const from=parseInt(document.getElementById('bfr').value);
+  const to=parseInt(document.getElementById('bto').value);
+  const resEl=document.getElementById('bres');
+  const lines=inp.split('\n').filter(l=>l.trim());
+  if(!lines.length){resEl.innerHTML='';return}
+  let html='',allVals=[];
+  for(const line of lines){
+    const r=convert(line.trim(),from,to);
+    if(r.err){
+      html+=`<div class="br"><div class="s">${line.trim()}</div><div class="de">${r.err}</div></div>`;
+    }else{
+      html+=`<div class="br"><div class="s">${line.trim()} (${from}进制)</div><div class="d">${r.val}</div></div>`;
+      allVals.push(r.val);
+    }
+  }
+  if(allVals.length>1){
+    html+=`<button class="ca" onclick="copyVal(this,'${allVals.join('\\n').replace(/'/g,"\\'")}')">复制全部结果</button>`;
+  }
+  resEl.innerHTML=html;
+}
+document.getElementById('bi').addEventListener('input',doBatch);
+document.getElementById('bfr').addEventListener('change',doBatch);
+document.getElementById('bto').addEventListener('change',doBatch);
 </script>
 <script src="https://alwingulla.com/88/tag.min.js" data-zone="130647" async data-cfasync="false"></script>
 </body>
