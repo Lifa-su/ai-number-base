@@ -245,6 +245,64 @@ document.getElementById('bi').addEventListener('input',doBatch);
 document.getElementById('bfr').addEventListener('change',doBatch);
 document.getElementById('bto').addEventListener('change',doBatch);
 </script>
+<!-- Pro Features Section -->
+<style>
+.pro-section{max-width:900px;margin:40px auto 0;padding:0 20px 40px;position:relative}
+.pro-hd{text-align:center;margin-bottom:20px}
+.pro-hd h2{font-size:1.5rem;color:var(--ac);margin-bottom:4px}
+.pro-hd p{color:var(--tx2);font-size:.9rem}
+.pro-wrap{position:relative;cursor:pointer;border-radius:12px;overflow:hidden}
+.pro-blur{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;filter:blur(6px);opacity:.6;pointer-events:none;user-select:none}
+.pro-card{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:20px}
+.pro-card h3{font-size:1rem;color:var(--ac);margin-bottom:8px}
+.pro-card p{color:var(--tx2);font-size:.85rem;line-height:1.5}
+.pro-card .mock-rows{margin-top:10px}
+.pro-card .mock-row{height:6px;background:var(--bd);border-radius:3px;margin-bottom:6px}
+.pro-card .mock-row:nth-child(1){width:90%}.pro-card .mock-row:nth-child(2){width:70%}.pro-card .mock-row:nth-child(3){width:50%}
+.pro-lock{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(26,26,46,.4);z-index:2}
+.pro-lock-icon{font-size:3rem;margin-bottom:10px}
+.pro-lock-text{font-size:1.1rem;font-weight:600;color:var(--tx)}
+.pro-lock-sub{font-size:.85rem;color:var(--tx2);margin-top:4px}
+.pro-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.pro-modal-overlay.active{display:flex}
+.pro-modal{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:36px;max-width:440px;width:90%;text-align:center;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.pro-modal h3{font-size:1.4rem;color:#fff;margin-bottom:6px}
+.pro-modal .pro-price{font-size:2rem;font-weight:700;color:var(--ac);margin:12px 0}
+.pro-modal ul{text-align:left;list-style:none;margin:18px 0;padding:0}
+.pro-modal ul li{padding:8px 0;color:#ccc;font-size:.95rem;border-bottom:1px solid var(--bd)}
+.pro-modal ul li::before{content:"✅ ";margin-right:6px}
+.pro-modal ul li:last-child{border-bottom:none}
+.pro-btn-upgrade{display:inline-block;width:100%;padding:14px;background:var(--ac);color:#fff;font-size:1.05rem;font-weight:700;border:none;border-radius:10px;cursor:pointer;text-decoration:none;transition:transform .2s,box-shadow .2s;margin-top:8px}
+.pro-btn-upgrade:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(233,69,96,.4)}
+.pro-btn-later{background:none;border:none;color:var(--tx2);font-size:.9rem;cursor:pointer;margin-top:14px;padding:8px;transition:color .2s}
+.pro-btn-later:hover{color:#ccc}
+@media(max-width:600px){.pro-blur{grid-template-columns:1fr}}
+</style>
+<div class="pro-section">
+<div class="pro-hd"><h2>🔒 Pro Features</h2><p>Power up your number conversions</p></div>
+<div class="pro-wrap" onclick="document.getElementById('proModal').classList.add('active')">
+<div class="pro-blur">
+<div class="pro-card"><h3>📦 Batch Convert</h3><p>Convert thousands of numbers from CSV or text files. Drag & drop file support with instant results.</p><div class="mock-rows"><div class="mock-row"></div><div class="mock-row"></div><div class="mock-row"></div></div></div>
+<div class="pro-card"><h3>📂 File Processing</h3><p>Upload files, auto-detect number formats, and export converted results as CSV, JSON, or TXT.</p><div class="mock-rows"><div class="mock-row"></div><div class="mock-row"></div><div class="mock-row"></div></div></div>
+<div class="pro-card"><h3>🔌 API Access</h3><p>REST API for programmatic conversions. Integrate number base conversion into your workflow.</p><div class="mock-rows"><div class="mock-row"></div><div class="mock-row"></div><div class="mock-row"></div></div></div>
+</div>
+<div class="pro-lock"><div class="pro-lock-icon">🔒</div><div class="pro-lock-text">Pro Features Locked</div><div class="pro-lock-sub">Click to unlock</div></div>
+</div>
+</div>
+<div class="pro-modal-overlay" id="proModal" onclick="if(event.target===this)this.classList.remove('active')">
+<div class="pro-modal">
+<h3>Unlock Pro Features</h3>
+<div class="pro-price">$9</div>
+<ul>
+<li>Batch Convert — process thousands at once</li>
+<li>File Processing — CSV, JSON, TXT import/export</li>
+<li>API Access — REST API for integrations</li>
+<li>Priority updates & support</li>
+</ul>
+<a class="pro-btn-upgrade" href="https://feifeicch.gumroad.com/l/ai-number-base-pro" target="_blank">Upgrade to Pro — $9</a>
+<br><button class="pro-btn-later" onclick="document.getElementById('proModal').classList.remove('active')">Maybe later</button>
+</div>
+</div>
 <script src="https://alwingulla.com/88/tag.min.js" data-zone="130647" async data-cfasync="false"></script>
 </body>
 </html>
